@@ -6,7 +6,7 @@ class Transactions:
     """База данных по транзакциям: формирование и сохранение в public"""
 
     def __init__(self, path_table: str):
-        print("Create transactions")
+
         data = pd.read_csv(path_table, sep=";")
         self.data = data.values.tolist()
         for i in tqdm.tqdm(range(len(self.data))):

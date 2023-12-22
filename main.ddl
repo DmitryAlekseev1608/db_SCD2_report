@@ -3,14 +3,14 @@
 -- Создание таблицы с метаданными
 
 create table public.alex_META_meta (
-    schema_name varchar(30),
-    table_name varchar(30),
+    schema_name varchar(50),
+    table_name varchar(50),
     max_update_dt timestamp(0)
 );
 
 insert into public.alex_META_meta( schema_name, table_name, max_update_dt )
-values( 'public.alex_DWH_FACT_transactions',
-        'alex_source',
+values( 'public',
+        'public.alex_DWH_FACT_transactions',
         to_timestamp('1900-01-01','YYYY-MM-DD')
         );
 
