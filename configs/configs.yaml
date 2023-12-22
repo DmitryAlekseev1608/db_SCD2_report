@@ -1,0 +1,8 @@
+db:
+  DIAL : "postgresql"
+  DRV : "psycopg2"
+  HOST : "rc1b-o3ezvcgz5072sgar.mdb.yandexcloud.net"
+  PORT : "6432"
+  BD : "db"
+  LOGIN : "hse"
+  PAS : "hsepassword"
