@@ -5,13 +5,13 @@
 create table public.alex_META_meta (
     schema_name varchar(50),
     table_name varchar(50),
-    max_update_dt timestamp(0)
+    max_update_dt DATE
 );
 
 insert into public.alex_META_meta( schema_name, table_name, max_update_dt )
 values( 'public',
         'public.alex_DWH_FACT_transactions',
-        to_timestamp('1900-01-01','YYYY-MM-DD')
+        DATE('1900-01-01')
         );
 
 -----------------------------------------------------------------
@@ -31,25 +31,25 @@ CREATE TABLE public.alex_DWH_FACT_transactions(
 -- Работа с таблицей alex_DWH_DIM_terminals_HIST
 
 CREATE TABLE public.alex_DWH_DIM_terminals_HIST(
-                                terminal_id VARCHAR(10),
-                                terminal_type VARCHAR(10), 
-                                terminal_city VARCHAR(10), 
-                                terminal_address VARCHAR(100),
-                                effective_from timestamp(0),
-	                            effective_to timestamp(0),
+                                terminal_id VARCHAR(30),
+                                terminal_type VARCHAR(30), 
+                                terminal_city VARCHAR(30), 
+                                terminal_address VARCHAR(300),
+                                effective_from DATE,
+	                            effective_to DATE,
 	                            deleted_flg bool
                                 );
 
 CREATE TABLE public.alex_STG_terminals(
-                                terminal_id VARCHAR(10),
-                                terminal_type VARCHAR(10), 
-                                terminal_city VARCHAR(10), 
-                                terminal_address VARCHAR(100),
-                                update_dt timestamp(0)
+                                terminal_id VARCHAR(30),
+                                terminal_type VARCHAR(30), 
+                                terminal_city VARCHAR(30), 
+                                terminal_address VARCHAR(300),
+                                update_dt DATE
                                 );
 
 CREATE TABLE public.alex_STG_terminals_del( 
-	id integer
+	terminal_id VARCHAR(30)
 );
 
 
