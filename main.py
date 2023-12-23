@@ -17,10 +17,10 @@ def main():
                         password=cfg.db.PAS,
                         port=cfg.db.PORT)
     
-    # Отключение автокоммита
+    # отключение автокоммита
     conn_db.autocommit = False
 
-    # Создание курсора
+    # создание курсора
     cursor_db = conn_db.cursor()
     PATH = {"2021-03-01": ["input/2021-03-01/transactions_01032021.txt",
                            "input/2021-03-01/terminals_01032021.xlsx"]}
@@ -30,23 +30,13 @@ def main():
     record = cursor_db.fetchone()
     print("Вы подключены к - ", record, "\n")
 
-    # print("Вставка данных в таблицу alex_DWH_FACT_transactions")
-    # alex_DWH_FACT_transactions = Transactions(PATH["2021-03-01"][0])
-    # cursor_db.executemany(alex_DWH_FACT_transactions.insert_table,
-    #                       alex_DWH_FACT_transactions.data)
-    
-    print("Вставка данных в таблицу public.alex_DWH_DIM_terminals_HIST")
+    # работа с alex_DWH_FACT_transactions
+    alex_DWH_FACT_transactions = Transactions(PATH["2021-03-01"][0])
+    alex_DWH_FACT_transactions.insert_date_in_table(cursor_db, conn_db)
+
+    # работа с public.alex_DWH_DIM_terminals_HIST
     alex_DWH_DIM_terminals_HIST = Terminals(PATH["2021-03-01"][1])
-    
-    print("1. Очистка стейджинговых таблиц")
-    cursor_db.execute(alex_DWH_DIM_terminals_HIST.del_stage)
-
-    print("2. Захват данных из источника (измененных с момента последней загрузки) в стейджинг")   
-    cursor_db.executemany(alex_DWH_DIM_terminals_HIST.copy_source,
-                           alex_DWH_DIM_terminals_HIST.data)
-
-
-    conn_db.commit()
+    alex_DWH_DIM_terminals_HIST.insert_date_in_table(cursor_db, conn_db)
 
 if __name__ == "__main__":
     main()
