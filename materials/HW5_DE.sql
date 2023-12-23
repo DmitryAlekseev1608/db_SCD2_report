@@ -121,7 +121,7 @@ from (
 	on stg.id = tgt.id
 	where stg.val <> tgt.val or ( stg.val is null and tgt.val is not null ) or ( stg.val is not null and tgt.val is null )
 ) tmp
-where alex_target.id = tmp.id; 
+where alex_target.id = tmp.id;
 
 -- 5.2. Добавление новой строчки с изменными данными в новой редакции (формат SCD2).
 insert into public.alex_target( id, val, start_dt, end_dt, is_deleted )

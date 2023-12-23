@@ -7,12 +7,26 @@ class Terminals:
     def __init__(self, path_table: str):
 
         self.source = pd.read_excel(path_table)
-        self.source['update_dt'] = path_table[6:16]
-        self.update_dt = path_table[6:16]    
+        self.update_dt = f"{path_table[-9:-5]}-{path_table[-11:-9]}-{path_table[-13:-11]}"
 
     def insert_date_in_table(self, cursor_db, conn_db):
+
+        # 0. Поиск обновленных строк
+        cursor_db.execute("""select(
+                                terminal_id,
+                                terminal_type,
+                                terminal_city,
+                                terminal_address,
+                                update_dt)
+                        from public.alex_STG_terminals
+                        """)
+        old_source= cursor_db.fetchall()
+        names = [x[0] for x in cursor_db.description]
+        old_source = pd.DataFrame(old_source, columns=names)
+        self.update_dt = self.update_dt.merge(old_source, on=['terminal_id', 'terminal_type', 'terminal_city', 'terminal_address'], how='left')
+        self.update_dt[self.update_dt['update_dt'] == None] = self.update_dt
         
-         # 1. Очистка стейджинговых таблиц
+        # 1. Очистка стейджинговых таблиц
         cursor_db.execute(""" delete from public.alex_STG_terminals;
                             delete from public.alex_STG_terminals_del;
                         """)
@@ -77,7 +91,7 @@ class Terminals:
                                 stg.terminal_type,
                                 stg.terminal_city,
                                 stg.terminal_address,
-                                stg.update_dt, 
+                                stg.update_dt,
                                 null 
                             from public.alex_STG_terminals stg
                             inner join public.alex_DWH_DIM_terminals_HIST tgt
@@ -87,7 +101,7 @@ class Terminals:
                             or (stg.terminal_address <> tgt.terminal_address or ( stg.terminal_address is null and tgt.terminal_address is not null ) or ( stg.terminal_address is not null and tgt.terminal_address is null ))                     
                           ) tmp
                         where public.alex_DWH_DIM_terminals_HIST.terminal_id = tmp.terminal_id;""")    
-        conn_db.commit()           
+        conn_db.commit()      
         
     # 5.2. Добавление новой строчки с изменными данными в новой редакции (формат SCD2)
         cursor_db.execute(f"""insert into public.alex_DWH_DIM_terminals_HIST(
