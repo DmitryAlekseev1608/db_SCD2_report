@@ -18,7 +18,7 @@ values( 'public',
 -- Работа с таблицей public.alex_DWH_FACT_transactions
 
 CREATE TABLE public.alex_DWH_FACT_transactions(
-                                trans_id V  ARCHAR(20),
+                                trans_id VARCHAR(20),
                                 trans_date TIMESTAMP(0),
                                 amt DECIMAL(30, 2),
                                 card_num VARCHAR(30),
