@@ -1,6 +1,5 @@
 import psycopg2
 from hydra import compose, initialize
-from omegaconf import OmegaConf
 from py_scripts.transactions import Transactions
 from py_scripts.terminals import Terminals
 from py_scripts.files_operations import save_name_file, trasfer_file
