@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 
 class Terminals:
     """База данных по терминалам: формирование и сохранение в public"""

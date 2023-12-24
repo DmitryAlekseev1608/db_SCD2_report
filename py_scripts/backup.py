@@ -32,7 +32,8 @@ def backup():
                       DROP TABLE public.alex_DWH_FACT_transactions;
                       DROP TABLE public.alex_DWH_DIM_terminals_HIST;    
                       DROP TABLE public.alex_STG_terminals;
-                      DROP TABLE public.alex_STG_terminals_del;                  
+                      DROP TABLE public.alex_STG_terminals_del;
+                      DROP TABLE public.alex_REP_FRAUD;                                     
                         """)   
 
     conn_db.commit()
