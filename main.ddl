@@ -19,12 +19,18 @@ values( 'public',
 
 CREATE TABLE public.alex_DWH_FACT_transactions(
                                 trans_id VARCHAR(20),
-                                trans_date DATE,
+                                trans_date TIMESTAMP(0),
                                 amt DECIMAL(30, 2),
                                 card_num VARCHAR(30),
                                 oper_type VARCHAR(30),
                                 oper_result VARCHAR(30),
-                                terminal VARCHAR(30)
+                                terminal VARCHAR(30),
+                                CONSTRAINT fk_card_num
+                                    FOREIGN KEY(card_num) 
+	                                REFERENCES info.cards(card_num),
+                                CONSTRAINT fk_terminal
+                                    FOREIGN KEY(terminal) 
+	                                REFERENCES public.alex_DWH_DIM_terminals_HIST(terminal_id)                              
                                 );
 
 -----------------------------------------------------------------
@@ -37,7 +43,8 @@ CREATE TABLE public.alex_DWH_DIM_terminals_HIST(
                                 terminal_address VARCHAR(300),
                                 effective_from DATE,
 	                            effective_to DATE,
-	                            deleted_flg bool
+	                            deleted_flg bool,
+                                PRIMARY_KEY(terminal_id)
                                 );
 
 CREATE TABLE public.alex_STG_terminals(
@@ -51,6 +58,18 @@ CREATE TABLE public.alex_STG_terminals(
 CREATE TABLE public.alex_STG_terminals_del( 
 	terminal_id VARCHAR(30)
 );
+
+-----------------------------------------------------------------
+-- Работа с таблицей public.alex_REP_FRAUD
+
+CREATE TABLE public.alex_REP_FRAUD(
+                                event_dt TIME(0),
+                                passport VARCHAR(30), 
+                                fio VARCHAR(100), 
+                                phone BPCHAR(16),
+                                event_type NUMERIC,
+                                report_dt DATE,
+                                );
 
 
 
