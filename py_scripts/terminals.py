@@ -1,5 +1,5 @@
 import pandas as pd
-import tqdm
+import numpy as np
 
 class Terminals:
     """База данных по терминалам: формирование и сохранение в public"""
@@ -12,20 +12,23 @@ class Terminals:
     def insert_date_in_table(self, cursor_db, conn_db):
 
         # 0. Поиск обновленных строк
-        cursor_db.execute("""select(
+        cursor_db.execute("""select
                                 terminal_id,
                                 terminal_type,
                                 terminal_city,
                                 terminal_address,
-                                update_dt)
-                        from public.alex_STG_terminals
+                                TO_CHAR(effective_from, 'yyyy-mm-dd')
+                        from public.alex_DWH_DIM_terminals_HIST
+                        where deleted_flg = false
+                        and effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD')
                         """)
-        old_source= cursor_db.fetchall()
+        records = cursor_db.fetchall()
         names = [x[0] for x in cursor_db.description]
-        old_source = pd.DataFrame(old_source, columns=names)
-        self.update_dt = self.update_dt.merge(old_source, on=['terminal_id', 'terminal_type', 'terminal_city', 'terminal_address'], how='left')
-        self.update_dt[self.update_dt['update_dt'] == None] = self.update_dt
-        
+        old_source = pd.DataFrame(records, columns=names)
+        self.source = self.source.merge(old_source, on=['terminal_id', 'terminal_type', 'terminal_city', 'terminal_address'], how='left')
+        self.source.columns = self.source.columns.str.replace('to_char', 'update_dt')
+        self.source.loc[self.source['update_dt'].isnull(), 'update_dt'] = self.update_dt
+
         # 1. Очистка стейджинговых таблиц
         cursor_db.execute(""" delete from public.alex_STG_terminals;
                             delete from public.alex_STG_terminals_del;
@@ -100,7 +103,9 @@ class Terminals:
                             or (stg.terminal_city <> tgt.terminal_city or ( stg.terminal_city is null and tgt.terminal_city is not null ) or ( stg.terminal_city is not null and tgt.terminal_city is null ))
                             or (stg.terminal_address <> tgt.terminal_address or ( stg.terminal_address is null and tgt.terminal_address is not null ) or ( stg.terminal_address is not null and tgt.terminal_address is null ))                     
                           ) tmp
-                        where public.alex_DWH_DIM_terminals_HIST.terminal_id = tmp.terminal_id;""")    
+                        where alex_DWH_DIM_terminals_HIST.terminal_id = tmp.terminal_id
+                        and alex_DWH_DIM_terminals_HIST.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD')
+                        """) 
         conn_db.commit()      
         
     # 5.2. Добавление новой строчки с изменными данными в новой редакции (формат SCD2)
@@ -112,7 +117,7 @@ class Terminals:
                                 effective_from,
 	                            effective_to,
 	                            deleted_flg)
-                            select 
+                            select distinct
                                 stg.terminal_id,
                                 stg.terminal_type,
                                 stg.terminal_city,
@@ -137,7 +142,7 @@ class Terminals:
                         where terminal_id in (
                             select tgt.terminal_id
                             from public.alex_DWH_DIM_terminals_HIST tgt
-                            left join public.alex_STG_terminals stg
+                            left join public.alex_STG_terminals_del stg
                             on stg.terminal_id = tgt.terminal_id
                             where stg.terminal_id is null
                         );
