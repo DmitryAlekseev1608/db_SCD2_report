@@ -15,25 +15,6 @@ values( 'public',
         );
 
 -----------------------------------------------------------------
--- Работа с таблицей public.alex_DWH_FACT_transactions
-
-CREATE TABLE public.alex_DWH_FACT_transactions(
-                                trans_id VARCHAR(20),
-                                trans_date TIMESTAMP(0),
-                                amt DECIMAL(30, 2),
-                                card_num VARCHAR(30),
-                                oper_type VARCHAR(30),
-                                oper_result VARCHAR(30),
-                                terminal VARCHAR(30),
-                                CONSTRAINT fk_card_num
-                                    FOREIGN KEY(card_num) 
-	                                REFERENCES info.cards(card_num),
-                                CONSTRAINT fk_terminal
-                                    FOREIGN KEY(terminal) 
-	                                REFERENCES public.alex_DWH_DIM_terminals_HIST(terminal_id)                              
-                                );
-
------------------------------------------------------------------
 -- Работа с таблицей alex_DWH_DIM_terminals_HIST
 
 CREATE TABLE public.alex_DWH_DIM_terminals_HIST(
@@ -44,7 +25,7 @@ CREATE TABLE public.alex_DWH_DIM_terminals_HIST(
                                 effective_from DATE,
 	                            effective_to DATE,
 	                            deleted_flg bool,
-                                PRIMARY_KEY(terminal_id)
+	                            PRIMARY KEY (terminal_id, effective_from)
                                 );
 
 CREATE TABLE public.alex_STG_terminals(
@@ -68,10 +49,18 @@ CREATE TABLE public.alex_REP_FRAUD(
                                 fio VARCHAR(100), 
                                 phone BPCHAR(16),
                                 event_type NUMERIC,
-                                report_dt DATE,
+                                report_dt DATE
                                 );
 
+-----------------------------------------------------------------
+-- Работа с таблицей public.alex_DWH_FACT_transactions
 
-
-
-
+CREATE TABLE public.alex_DWH_FACT_transactions(
+                                trans_id VARCHAR(20),
+                                trans_date TIMESTAMP(0),
+                                amt DECIMAL(30, 2),
+                                card_num VARCHAR(30),
+                                oper_type VARCHAR(30),
+                                oper_result VARCHAR(30),
+                                terminal VARCHAR(30)                       
+                                );
