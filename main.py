@@ -6,7 +6,7 @@ from py_scripts.files_operations import save_name_file, trasfer_file
 from py_scripts.fraud import Fraud
 
 def main():
-    
+
     # считываем имена файлов
     name_files_dir_blacklist, name_files_dir_terminals, name_files_dir_transactions = save_name_file()
 

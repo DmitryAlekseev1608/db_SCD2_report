@@ -2,6 +2,7 @@ import os
 import shutil
 
 def save_name_file():
+
     name_files_dir = os.listdir('input')
     name_files_dir.sort()
     name_files_dir_blacklist = None
