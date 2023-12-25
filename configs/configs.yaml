@@ -7,5 +7,5 @@ db:
   LOGIN : "hse"
   PAS : "hsepassword"
 files:
-  path_to_input : "/opt/airflow/project/input"
-  path_to_archive : "/opt/airflow/project/archive" 
+  path_to_input : "/opt/project/input"
+  path_to_archive : "/opt/project/archive"
