@@ -1,18 +1,21 @@
 import sys
-sys.path.append("/opt/airflow/project/")
+sys.path.append("/opt/project/")
 
-import datetime as dt
-from main import main
-
+from datetime import datetime
+import os
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
+from main import main
 
+default_args = {
+   'owner': 'alex',
+   'start_date': datetime(2023, 12, 24)
+}
 
-default_args = {"owner": "alex", "start_date": dt.datetime(2023, 12, 24)}
+dag = DAG('alex_work',
+          schedule_interval="@daily",
+          default_args = default_args,
+          catchup=True)
 
-with DAG(
-    "alex_db_work",
-    default_args=default_args,
-    schedule_interval="@dayly",
-) as dag:
-    air_db = PythonOperator(task_id="analize_datas", python_callable=main())
+start_operator = PythonOperator(task_id='work_with_db',
+                    python_callable=main, dag=dag)
