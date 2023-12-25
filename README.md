@@ -9,3 +9,5 @@ http://localhost:8080
 login airflow
 password airflow
 sudo docker-compose down --volumes --rmi all
+
+AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT: 600    
