@@ -9,9 +9,10 @@ from main import main
 
 default_args = {
    'owner': 'alex',
-   'start_date': datetime(2023, 12, 24)
+   'start_date': datetime(2023, 12, 25)
 }
 
+# для запуска раз в день поставить schedule_interval="@daily"
 dag = DAG('alex_work',
           schedule_interval="@daily",
           default_args = default_args,

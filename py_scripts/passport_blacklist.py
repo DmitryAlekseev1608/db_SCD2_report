@@ -22,8 +22,12 @@ class PassportBlackList:
         records = cursor_db.fetchall()
         names = [x[0] for x in cursor_db.description]
         old_source = pd.DataFrame(records, columns=names)
+        self.source.columns = self.source.columns.str.replace('passport', 'passport_num')
+        self.source.columns = self.source.columns.str.replace('date', 'entry_dt')
+        self.source['entry_dt'] = self.source['entry_dt'].astype(str)
         self.source = self.source.merge(old_source, on=['passport_num', 'entry_dt'], how='left')
         self.source.columns = self.source.columns.str.replace('to_char', 'update_dt')
+        self.source = self.source[['passport_num', 'entry_dt', 'update_dt']]
         self.source.loc[self.source['update_dt'].isnull(), 'update_dt'] = self.update_dt
 
         # 1. Очистка стейджинговых таблиц
@@ -38,7 +42,7 @@ class PassportBlackList:
                         where schema_name='public'
                         and table_name='public.alex_DWH_FACT_passport_blacklist'
                         """)
-        max_update_dt = cursor_db.fetchall()[0][0].strftime('20%y-%m-%d')
+        max_update_dt = cursor_db.fetchall()[0][0].strftime('%Y-%m-%d')
         cursor_db.executemany(""" insert into public.alex_STG_passport_blacklist(
                                 passport_num,
                                 entry_dt,
@@ -48,8 +52,8 @@ class PassportBlackList:
         conn_db.commit()
         
         # 3. Захват в стейджинг ключей из источника полным срезом для вычисления удалений:
-        tmp_source_passport_blacklist = [[i] for i in self.source['terminal_id'].values.tolist()]
-        cursor_db.executemany("""insert into public.alex_STG_passport_blacklist_del( terminal_id
+        tmp_source_passport_blacklist = [[i] for i in self.source['passport_num'].values.tolist()]
+        cursor_db.executemany("""insert into public.alex_STG_passport_blacklist_del( passport_num
                             ) VALUES(%s);
                             """, tmp_source_passport_blacklist)
         conn_db.commit()

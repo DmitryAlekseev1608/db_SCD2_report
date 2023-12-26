@@ -2,6 +2,7 @@ import psycopg2
 from hydra import compose, initialize
 from py_scripts.transactions import Transactions
 from py_scripts.terminals import Terminals
+from py_scripts.passport_blacklist import PassportBlackList
 from py_scripts.files_operations import save_name_file, trasfer_file
 from py_scripts.fraud import Fraud
 
@@ -39,6 +40,10 @@ def main():
     # работа с public.alex_DWH_DIM_terminals_HIST
     alex_DWH_DIM_terminals_HIST = Terminals(f"{cfg.files.path_to_input}/{name_files_dir_terminals}")
     alex_DWH_DIM_terminals_HIST.insert_date_in_table(cursor_db, conn_db)
+
+    # работа с public.alex_DWH_FACT_passport_blacklist
+    alex_DWH_FACT_passport_blacklist = PassportBlackList(f"{cfg.files.path_to_input}/{name_files_dir_blacklist}")
+    alex_DWH_FACT_passport_blacklist.insert_date_in_table(cursor_db, conn_db)
 
     # работа с public.alex_REP_FRAUD
     alex_REP_FRAUD = Fraud(name_files_dir_transactions)

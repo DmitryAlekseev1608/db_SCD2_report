@@ -9,13 +9,12 @@ create table public.alex_META_meta (
 );
 
 insert into public.alex_META_meta( schema_name, table_name, max_update_dt )
-values( ('public',
+values ('public',
         'public.alex_DWH_DIM_terminals_HIST',
-        DATE('1900-01-01'))
+        DATE('1900-01-01')),
         ('public',
         'public.alex_DWH_FACT_passport_blacklist',
-        DATE('1900-01-01'))
-        );
+        DATE('1900-01-01'));
 
 -----------------------------------------------------------------
 -- Работа с таблицей alex_DWH_DIM_terminals_HIST
@@ -73,7 +72,7 @@ CREATE TABLE public.alex_DWH_FACT_transactions(
 
 CREATE TABLE public.alex_DWH_FACT_passport_blacklist(
                                 passport_num VARCHAR(50),
-                                entry_dt DATE
+                                entry_dt DATE,
                                 effective_from DATE,
 	                            effective_to DATE,
 	                            deleted_flg bool,
@@ -82,7 +81,7 @@ CREATE TABLE public.alex_DWH_FACT_passport_blacklist(
 
 CREATE TABLE public.alex_STG_passport_blacklist(
                                 passport_num VARCHAR(50),
-                                entry_dt DATE
+                                entry_dt DATE,
                                 update_dt DATE,
 	                            PRIMARY KEY (passport_num)                                
                                 );

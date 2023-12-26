@@ -40,7 +40,7 @@ class Terminals:
                         where schema_name='public'
                         and table_name='public.alex_DWH_DIM_terminals_HIST'
                         """)
-        max_update_dt = cursor_db.fetchall()[0][0].strftime('20%y-%m-%d')
+        max_update_dt = cursor_db.fetchall()[0][0].strftime('%Y-%m-%d')
         cursor_db.executemany(""" insert into public.alex_STG_terminals(
                                 terminal_id,
                                 terminal_type,
