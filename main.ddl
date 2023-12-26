@@ -5,7 +5,8 @@
 create table public.alex_META_meta (
     schema_name varchar(50),
     table_name varchar(50),
-    max_update_dt DATE
+    max_update_dt DATE,
+    PRIMARY KEY(table_name)
 );
 
 insert into public.alex_META_meta( schema_name, table_name, max_update_dt )
@@ -14,6 +15,9 @@ values ('public',
         DATE('1900-01-01')),
         ('public',
         'public.alex_DWH_FACT_passport_blacklist',
+        DATE('1900-01-01')),
+        ('public',
+        'public.alex_DWH_DIM_cards_HIST',
         DATE('1900-01-01'));
 
 -----------------------------------------------------------------
@@ -35,11 +39,12 @@ CREATE TABLE public.alex_STG_terminals(
                                 terminal_type VARCHAR(30), 
                                 terminal_city VARCHAR(30), 
                                 terminal_address VARCHAR(300),
-                                update_dt DATE
+                                update_dt DATE,
+	                            PRIMARY KEY (terminal_id)
                                 );
 
 CREATE TABLE public.alex_STG_terminals_del( 
-	terminal_id VARCHAR(30)
+	terminal_id VARCHAR(30) PRIMARY KEY
 );
 
 -----------------------------------------------------------------
@@ -64,7 +69,7 @@ CREATE TABLE public.alex_DWH_FACT_transactions(
                                 card_num VARCHAR(30),
                                 oper_type VARCHAR(30),
                                 oper_result VARCHAR(30),
-                                terminal VARCHAR(30)                       
+                                terminal VARCHAR(30)
                                 );
 
 -----------------------------------------------------------------
@@ -87,5 +92,28 @@ CREATE TABLE public.alex_STG_passport_blacklist(
                                 );
 
 CREATE TABLE public.alex_STG_passport_blacklist_del( 
-	                            passport_num VARCHAR(30)
+	                            passport_num VARCHAR(30) PRIMARY KEY
+                                );
+
+-----------------------------------------------------------------
+-- Работа с таблицей public.alex_DWH_DIM_cards_HIST
+
+CREATE TABLE public.alex_DWH_DIM_cards_HIST(
+                                card_num VARCHAR(50),
+                                account_num VARCHAR(50),
+                                effective_from DATE,
+	                            effective_to DATE,
+	                            deleted_flg bool,
+	                            PRIMARY KEY (account_num, effective_from)
+                                );
+
+CREATE TABLE public.alex_STG_cards(
+                                card_num VARCHAR(50),
+                                account_num VARCHAR(50),
+                                update_dt DATE,
+	                            PRIMARY KEY (account_num)                                
+                                );
+
+CREATE TABLE public.alex_STG_cards_del( 
+	                            card_num VARCHAR(50) PRIMARY KEY
                                 );
