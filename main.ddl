@@ -83,7 +83,8 @@ CREATE TABLE public.alex_DWH_FACT_passport_blacklist(
 CREATE TABLE public.alex_STG_passport_blacklist(
                                 passport_num VARCHAR(50),
                                 entry_dt DATE
-                                update_dt DATE
+                                update_dt DATE,
+	                            PRIMARY KEY (passport_num)                                
                                 );
 
 CREATE TABLE public.alex_STG_passport_blacklist_del( 
