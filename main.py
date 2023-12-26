@@ -51,5 +51,8 @@ def main():
 
     trasfer_file(cfg, name_files_dir_blacklist, name_files_dir_terminals, name_files_dir_transactions)
 
+    cursor_db.close()
+    conn_db.close()
+
 if __name__ == "__main__":
     main()
