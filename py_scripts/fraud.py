@@ -20,21 +20,31 @@ class Fraud:
                                 event_type,
                                 report_dt
                                 )
-                            select 
+                            select
+                                tmp_p.event_dt,	
+                                tmp_p.passport,
+                                tmp_p.fio,
+                                tmp_p.phone,
+                                tmp_p.event_type,
+                                tmp_p.report_dt
+                            from
+                            (select 
                                 tmp_a.trans_date::time as event_dt,	
                                 cln.passport_num as passport,
                                 cln.last_name || ' ' || cln.first_name || ' ' || cln.patronymic as fio,
                                 cln.phone as phone,
                                 1 as event_type,
-                                tmp_a.trans_date::date as report_dt
+                                tmp_a.trans_date::date as report_dt,
+                                cln.passport_valid_to as passport_valid_to,
+                                tmp_a.trans_date::date as trans_date
                             from
                             (select
                                 tmp.trans_date as trans_date,
                                 acn.client as client
                             from
                             (select
-                            trn.trans_date as trans_date,
-                            crd.account as account
+                                trn.trans_date as trans_date,
+                                crd.account as account
                             from public.alex_DWH_FACT_transactions trn
                             left join info.cards crd
                             on crd.card_num = trn.card_num
@@ -42,8 +52,11 @@ class Fraud:
                             left join info.accounts acn
                             on tmp.account = acn.account) tmp_a
                             left join info.clients cln
-                            on tmp_a.client = cln.client_id
-                            where cln.passport_valid_to < tmp_a.trans_date::date
-                            or cln.passport_valid_to = tmp_a.trans_date::date
+                            on tmp_a.client = cln.client_id) tmp_p
+                            left join public.alex_dwh_fact_passport_blacklist pbl
+                            on tmp_p.passport = pbl.passport_num
+                            where (pbl.passport_num = tmp_p.passport and pbl.deleted_flg = false and pbl.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD'))
+                            or (tmp_p.passport_valid_to < tmp_p.trans_date)
+                            or (tmp_p.passport_valid_to = tmp_p.trans_date)
                             """)
         conn_db.commit()
