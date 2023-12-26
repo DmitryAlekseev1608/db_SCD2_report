@@ -7,5 +7,9 @@ db:
   LOGIN : "hse"
   PAS : "hsepassword"
 files:
+# Пути до файлов при локальном запуске:
+  # path_to_input : "input"
+  # path_to_archive : "archive"
+# Пути до файлов при запуске с airflow:
   path_to_input : "/opt/project/input"
   path_to_archive : "/opt/project/archive"
