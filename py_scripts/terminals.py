@@ -38,7 +38,7 @@ class Terminals:
         cursor_db.execute("""select max_update_dt
                         from public.alex_META_meta
                         where schema_name='public'
-                        and table_name='public.alex_DWH_FACT_transactions'
+                        and table_name='public.alex_DWH_DIM_terminals_HIST'
                         """)
         max_update_dt = cursor_db.fetchall()[0][0].strftime('20%y-%m-%d')
         cursor_db.executemany(""" insert into public.alex_STG_terminals(
@@ -151,7 +151,7 @@ class Terminals:
     # 7. Обновление метаданных
         cursor_db.execute("""update public.alex_META_meta
                         set max_update_dt = coalesce( (select max( update_dt ) from public.alex_STG_terminals ), ( select max_update_dt
-                            from public.alex_META_meta where schema_name='public' and table_name='public.alex_DWH_FACT_transactions' ) )
-                        where schema_name='public' and table_name = 'public.alex_DWH_FACT_transactions';
+                            from public.alex_META_meta where schema_name='public' and table_name='public.alex_DWH_DIM_terminals_HIST' ) )
+                        where schema_name='public' and table_name = 'public.alex_DWH_DIM_terminals_HIST';
                         """)
         conn_db.commit()
