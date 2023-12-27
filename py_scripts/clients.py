@@ -16,10 +16,22 @@ class Clients:
 
         # 2. Захват данных из источника (измененных с момента последней загрузки) в стейджинг
         cursor_db.execute(f""" insert into public.alex_STG_clients(
-                          card_num,
-                          account_num,
+                          client_id,
+                          fio,
+                          date_of_birth,
+                          passport_num,
+                          passport_valid_to,
+                          phone,
                           update_dt )
                         select
+                          
+
+
+
+
+
+
+                          
                           card_num,
                           account,
                           TO_DATE('{self.update_dt}', 'YYYY-MM-DD')
