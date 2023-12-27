@@ -24,18 +24,14 @@ class Clients:
                           phone,
                           update_dt )
                         select
-                          
-
-
-
-
-
-
-                          
-                          card_num,
-                          account,
+                          client_id,
+                          fio,
+                          date_of_birth,
+                          passport_num,
+                          passport_valid_to,
+                          phone,
                           TO_DATE('{self.update_dt}', 'YYYY-MM-DD')
-                        from info.cards
+                        from info.clients
                         where update_dt >
                         (select 
                           max_update_dt
@@ -47,13 +43,20 @@ class Clients:
         conn_db.commit()
         
         # 3. Захват в стейджинг ключей из источника полным срезом для вычисления удалений:
-        cursor_db.execute(""" insert into public.alex_STG_clients_del( card_num )
-                        select card_num from info.cards;
+        cursor_db.execute(""" insert into public.alex_STG_clients_del( client_id )
+                        select client_id from info.cards;
                        """)
         conn_db.commit()
         
         # 4. Загрузка в target новых строчек из источника, если они есть (формат SCD2):
         cursor_db.execute(f"""insert into public.alex_DWH_DIM_clients_HIST(
+                                
+                          
+                          
+                          
+                          
+                          
+                          
                                 card_num,
                                 account_num,
                                 effective_from,
