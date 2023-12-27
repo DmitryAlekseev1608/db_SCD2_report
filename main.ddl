@@ -18,6 +18,12 @@ values ('public',
         DATE('1900-01-01')),
         ('public',
         'public.alex_DWH_DIM_cards_HIST',
+        DATE('1900-01-01')),
+        ('public',
+        'public.alex_DWH_DIM_account_HIST',
+        DATE('1900-01-01')),
+        ('public',
+        'public.alex_DWH_DIM_clients_HIST',
         DATE('1900-01-01'));
 
 -----------------------------------------------------------------
@@ -103,17 +109,70 @@ CREATE TABLE public.alex_DWH_DIM_cards_HIST(
                                 account_num VARCHAR(50),
                                 effective_from DATE,
 	                            effective_to DATE,
-	                            deleted_flg bool,
-	                            PRIMARY KEY (account_num, effective_from)
+	                            deleted_flg bool
                                 );
 
 CREATE TABLE public.alex_STG_cards(
                                 card_num VARCHAR(50),
                                 account_num VARCHAR(50),
                                 update_dt DATE,
-	                            PRIMARY KEY (account_num)                                
+	                            PRIMARY KEY (card_num)                                
                                 );
 
 CREATE TABLE public.alex_STG_cards_del( 
 	                            card_num VARCHAR(50) PRIMARY KEY
+                                );
+
+-----------------------------------------------------------------
+-- Работа с таблицей public.alex_DWH_DIM_account_HIST
+
+CREATE TABLE public.alex_DWH_DIM_account_HIST(
+                                account_num VARCHAR(50),
+                                valid_to DATE,
+                                client VARCHAR(100),
+                                effective_from DATE,
+	                            effective_to DATE,
+	                            deleted_flg bool
+                                );
+
+CREATE TABLE public.alex_STG_account(
+                                account_num VARCHAR(50),
+                                valid_to DATE,
+                                client VARCHAR(100),
+                                update_dt DATE,
+	                            PRIMARY KEY (account_num)                                
+                                );
+
+CREATE TABLE public.alex_STG_account_del( 
+	                            account_num VARCHAR(50) PRIMARY KEY
+                                );
+
+-----------------------------------------------------------------
+-- Работа с таблицей public.alex_DWH_DIM_clients_HIST
+
+CREATE TABLE public.alex_DWH_DIM_clients_HIST(
+                                client_id VARCHAR(50),
+                                fio VARCHAR(100),
+                                date_of_birth DATE,
+                                passport_num VARCHAR(50),
+                                passport_valid_to DATE,
+                                phone VARCHAR(50),
+                                effective_from DATE,
+	                            effective_to DATE,
+	                            deleted_flg bool
+                                );
+
+CREATE TABLE public.alex_STG_clients(
+                                client_id VARCHAR(50),
+                                fio VARCHAR(100),
+                                date_of_birth DATE,
+                                passport_num VARCHAR(50),
+                                passport_valid_to DATE,
+                                phone VARCHAR(50),
+                                update_dt DATE,
+	                            PRIMARY KEY (client_id)                                
+                                );
+
+CREATE TABLE public.alex_STG_clients_del( 
+	                            client_id VARCHAR(50) PRIMARY KEY
                                 );
