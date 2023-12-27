@@ -36,7 +36,13 @@ def backup():
                       DROP TABLE public.alex_REP_FRAUD;
                       DROP TABLE public.alex_DWH_FACT_passport_blacklist;
                       DROP TABLE public.alex_STG_passport_blacklist;    
-                      DROP TABLE public.alex_STG_passport_blacklist_del;                                                               
+                      DROP TABLE public.alex_STG_passport_blacklist_del;   
+                      DROP TABLE public.alex_DWH_DIM_cards_HIST;
+                      DROP TABLE public.alex_STG_cards;    
+                      DROP TABLE public.alex_STG_cards_del;  
+                      DROP TABLE public.alex_DWH_DIM_account_HIST;  
+                      DROP TABLE public.alex_STG_account;  
+                      DROP TABLE public.alex_STG_account_del;                                                                                    
                         """)   
 
     conn_db.commit()

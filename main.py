@@ -3,6 +3,9 @@ from hydra import compose, initialize
 from py_scripts.transactions import Transactions
 from py_scripts.terminals import Terminals
 from py_scripts.passport_blacklist import PassportBlackList
+from py_scripts.cards import Cards
+from py_scripts.account import Account
+from py_scripts.clients import Clients
 from py_scripts.files_operations import save_name_file, trasfer_file
 from py_scripts.fraud import Fraud
 
@@ -34,20 +37,32 @@ def main():
     print("Вы подключены к - ", record, "\n")
 
     # работа с alex_DWH_FACT_transactions
-    alex_DWH_FACT_transactions = Transactions(f"{cfg.files.path_to_input}/{name_files_dir_transactions}")
-    alex_DWH_FACT_transactions.insert_date_in_table(cursor_db, conn_db)
+    # alex_DWH_FACT_transactions = Transactions(f"{cfg.files.path_to_input}/{name_files_dir_transactions}")
+    # alex_DWH_FACT_transactions.insert_date_in_table(cursor_db, conn_db)
 
     # работа с public.alex_DWH_DIM_terminals_HIST
-    alex_DWH_DIM_terminals_HIST = Terminals(f"{cfg.files.path_to_input}/{name_files_dir_terminals}")
-    alex_DWH_DIM_terminals_HIST.insert_date_in_table(cursor_db, conn_db)
+    # alex_DWH_DIM_terminals_HIST = Terminals(f"{cfg.files.path_to_input}/{name_files_dir_terminals}")
+    # alex_DWH_DIM_terminals_HIST.insert_date_in_table(cursor_db, conn_db)
 
     # работа с public.alex_DWH_FACT_passport_blacklist
-    alex_DWH_FACT_passport_blacklist = PassportBlackList(f"{cfg.files.path_to_input}/{name_files_dir_blacklist}")
-    alex_DWH_FACT_passport_blacklist.insert_date_in_table(cursor_db, conn_db)
+    # alex_DWH_FACT_passport_blacklist = PassportBlackList(f"{cfg.files.path_to_input}/{name_files_dir_blacklist}")
+    # alex_DWH_FACT_passport_blacklist.insert_date_in_table(cursor_db, conn_db)
+
+    # работа с public.alex_DWH_DIM_cards_HIST
+    # alex_DWH_DIM_cards_HIST = Cards(name_files_dir_terminals)
+    # alex_DWH_DIM_cards_HIST.insert_date_in_table(cursor_db, conn_db)
+
+    # работа с public.alex_DWH_DIM_account_HIST
+    # alex_DWH_DIM_account_HIST = Account(name_files_dir_terminals)
+    # alex_DWH_DIM_account_HIST.insert_date_in_table(cursor_db, conn_db)
+
+    # работа с public.alex_DWH_DIM_clients_HIST
+    alex_DWH_DIM_clients_HIST = Clients(name_files_dir_terminals)
+    alex_DWH_DIM_clients_HIST.insert_date_in_table(cursor_db, conn_db)   
 
     # работа с public.alex_REP_FRAUD
-    alex_REP_FRAUD = Fraud(name_files_dir_transactions)
-    alex_REP_FRAUD.insert_date_in_table_type_1(cursor_db, conn_db)
+    # alex_REP_FRAUD = Fraud(name_files_dir_transactions)
+    # alex_REP_FRAUD.insert_date_in_table_type_1(cursor_db, conn_db)
 
     trasfer_file(cfg, name_files_dir_blacklist, name_files_dir_terminals, name_files_dir_transactions)
 
