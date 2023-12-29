@@ -24,18 +24,14 @@ class Clients:
                           phone,
                           update_dt )
                         select
-                          
-
-
-
-
-
-
-                          
-                          card_num,
-                          account,
+                          client_id,
+                          fio,
+                          date_of_birth,
+                          passport_num,
+                          passport_valid_to,
+                          phone,
                           TO_DATE('{self.update_dt}', 'YYYY-MM-DD')
-                        from info.cards
+                        from info.clients
                         where update_dt >
                         (select 
                           max_update_dt
@@ -47,29 +43,37 @@ class Clients:
         conn_db.commit()
         
         # 3. Захват в стейджинг ключей из источника полным срезом для вычисления удалений:
-        cursor_db.execute(""" insert into public.alex_STG_clients_del( card_num )
-                        select card_num from info.cards;
+        cursor_db.execute(""" insert into public.alex_STG_clients_del( client_id )
+                        select client_id from info.cards;
                        """)
         conn_db.commit()
         
         # 4. Загрузка в target новых строчек из источника, если они есть (формат SCD2):
         cursor_db.execute(f"""insert into public.alex_DWH_DIM_clients_HIST(
-                                card_num,
-                                account_num,
+                                client_id,
+                                fio,
+                                date_of_birth,
+                                passport_num,
+                                passport_valid_to,
+                                phone,
                                 effective_from,
 	                            effective_to,
 	                            deleted_flg
                           ) 
                           select
-                                stg.card_num,
-                                stg.account_num,
+                                stg.client_id,
+                                stg.fio,
+                                stg.date_of_birth,
+                                stg.passport_num,
+                                stg.passport_valid_to,
+                                stg.phone,
                                 update_dt,
                                 TO_DATE('2999-01-01', 'YYYY-MM-DD'),
                                 false
                             from public.alex_STG_clients stg
                             left join public.alex_DWH_DIM_clients_HIST tgt
-                            on stg.card_num = tgt.card_num
-                            where tgt.card_num is null;""")
+                            on stg.client_id = tgt.client_id
+                            where tgt.client_id is null;""")
         conn_db.commit()
 
     # 5. Обновление в target измененных строчек на источнике в два этапа (формат SCD2).
@@ -79,37 +83,57 @@ class Clients:
                             effective_to = TO_DATE('{self.update_dt}', 'YYYY-MM-DD') - interval '1 day'
                         from (
                             select 
-                                stg.card_num,
-                                stg.account_num,
+                                stg.client_id,
+                                stg.fio,
+                                stg.date_of_birth,
+                                stg.passport_num,
+                                stg.passport_valid_to,
+                                stg.phone,                                
                                 stg.update_dt,
-                                null 
+                                null
                             from public.alex_STG_clients stg
                             inner join public.alex_DWH_DIM_clients_HIST tgt
-                            on stg.card_num = tgt.card_num
-                            where (stg.account_num <> tgt.account_num or ( stg.account_num is null and tgt.account_num is not null ) or ( stg.account_num is not null and tgt.account_num is null ))
+                            on stg.client_id = tgt.client_id
+                            where (stg.fio <> tgt.fio or ( stg.fio is null and tgt.fio is not null ) or ( stg.fio is not null and tgt.fio is null ))
+                            where (stg.date_of_birth <> tgt.date_of_birth or ( stg.date_of_birth is null and tgt.date_of_birth is not null ) or ( stg.date_of_birth is not null and tgt.date_of_birth is null ))                          
+                            where (stg.passport_num <> tgt.passport_num or ( stg.passport_num is null and tgt.passport_num is not null ) or ( stg.passport_num is not null and tgt.passport_num is null ))                          
+                            where (stg.passport_valid_to <> tgt.passport_valid_to or ( stg.passport_valid_to is null and tgt.passport_valid_to is not null ) or ( stg.passport_valid_to is not null and tgt.passport_valid_to is null ))                          
+                            where (stg.phone <> tgt.phone or ( stg.phone is null and tgt.phone is not null ) or ( stg.phone is not null and tgt.phone is null ))                          
                           ) tmp
-                        where alex_DWH_DIM_clients_HIST.card_num = tmp.card_num
+                        where alex_DWH_DIM_clients_HIST.client_id = tmp.client_id
                         and alex_DWH_DIM_clients_HIST.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD')
                         """)
         conn_db.commit()      
         
     # 5.2. Добавление новой строчки с изменными данными в новой редакции (формат SCD2)
         cursor_db.execute(f"""insert into public.alex_DWH_DIM_clients_HIST(
-                                card_num,
-                                account_num, 
+                                client_id,
+                                fio,
+                                date_of_birth,
+                                passport_num,
+                                passport_valid_to,
+                                phone,
                                 effective_from,
 	                            effective_to,
 	                            deleted_flg)
                             select distinct
-                                stg.card_num,
-                                stg.account_num,
+                                stg.client_id,
+                                stg.fio,
+                                stg.date_of_birth,
+                                stg.passport_num,
+                                stg.passport_valid_to,
+                                stg.phone,                                
                                 stg.update_dt,
                                 TO_DATE('2999-01-01', 'YYYY-MM-DD'),
                                 false
                             from public.alex_STG_clients stg
                             inner join public.alex_DWH_DIM_clients_HIST tgt
-                            on stg.card_num = tgt.card_num
-                            where stg.account_num <> tgt.account_num or ( stg.account_num is null and tgt.account_num is not null ) or ( stg.account_num is not null and tgt.account_num is null )
+                            on stg.client_id = tgt.client_id
+                            where (stg.fio <> tgt.fio or ( stg.fio is null and tgt.fio is not null ) or ( stg.fio is not null and tgt.fio is null ))
+                            where (stg.date_of_birth <> tgt.date_of_birth or ( stg.date_of_birth is null and tgt.date_of_birth is not null ) or ( stg.date_of_birth is not null and tgt.date_of_birth is null ))                          
+                            where (stg.passport_num <> tgt.passport_num or ( stg.passport_num is null and tgt.passport_num is not null ) or ( stg.passport_num is not null and tgt.passport_num is null ))                          
+                            where (stg.passport_valid_to <> tgt.passport_valid_to or ( stg.passport_valid_to is null and tgt.passport_valid_to is not null ) or ( stg.passport_valid_to is not null and tgt.passport_valid_to is null ))                          
+                            where (stg.phone <> tgt.phone or ( stg.phone is null and tgt.phone is not null ) or ( stg.phone is not null and tgt.phone is null ))
                             """)
         conn_db.commit()
 
@@ -118,13 +142,12 @@ class Clients:
                         set 
                             effective_to = TO_DATE('{self.update_dt}', 'YYYY-MM-DD') - interval '1 day',
                             deleted_flg = true
-                        where card_num in (
-                            select tgt.card_num
+                        where client_id in (
+                            select tgt.client_id
                             from public.alex_DWH_DIM_clients_HIST tgt
                             left join public.alex_STG_clients_del stg
-                            on stg.card_num = tgt.card_num
-                            where stg.card_num is null
-                        );
+                            on stg.client_id = tgt.client_id
+                            where stg.client_id is null);
                         """)
         conn_db.commit()    
 
