@@ -25,7 +25,7 @@ class Clients:
                           update_dt )
                         select
                           client_id,
-                          fio,
+                          last_name || ' ' || first_name || ' ' || patronymic as fio,
                           date_of_birth,
                           passport_num,
                           passport_valid_to,
@@ -44,7 +44,7 @@ class Clients:
         
         # 3. Захват в стейджинг ключей из источника полным срезом для вычисления удалений:
         cursor_db.execute(""" insert into public.alex_STG_clients_del( client_id )
-                        select client_id from info.cards;
+                        select client_id from info.clients;
                        """)
         conn_db.commit()
         
@@ -95,10 +95,10 @@ class Clients:
                             inner join public.alex_DWH_DIM_clients_HIST tgt
                             on stg.client_id = tgt.client_id
                             where (stg.fio <> tgt.fio or ( stg.fio is null and tgt.fio is not null ) or ( stg.fio is not null and tgt.fio is null ))
-                            where (stg.date_of_birth <> tgt.date_of_birth or ( stg.date_of_birth is null and tgt.date_of_birth is not null ) or ( stg.date_of_birth is not null and tgt.date_of_birth is null ))                          
-                            where (stg.passport_num <> tgt.passport_num or ( stg.passport_num is null and tgt.passport_num is not null ) or ( stg.passport_num is not null and tgt.passport_num is null ))                          
-                            where (stg.passport_valid_to <> tgt.passport_valid_to or ( stg.passport_valid_to is null and tgt.passport_valid_to is not null ) or ( stg.passport_valid_to is not null and tgt.passport_valid_to is null ))                          
-                            where (stg.phone <> tgt.phone or ( stg.phone is null and tgt.phone is not null ) or ( stg.phone is not null and tgt.phone is null ))                          
+                            or (stg.date_of_birth <> tgt.date_of_birth or ( stg.date_of_birth is null and tgt.date_of_birth is not null ) or ( stg.date_of_birth is not null and tgt.date_of_birth is null ))                          
+                            or (stg.passport_num <> tgt.passport_num or ( stg.passport_num is null and tgt.passport_num is not null ) or ( stg.passport_num is not null and tgt.passport_num is null ))                          
+                            or (stg.passport_valid_to <> tgt.passport_valid_to or ( stg.passport_valid_to is null and tgt.passport_valid_to is not null ) or ( stg.passport_valid_to is not null and tgt.passport_valid_to is null ))                          
+                            or (stg.phone <> tgt.phone or ( stg.phone is null and tgt.phone is not null ) or ( stg.phone is not null and tgt.phone is null ))                          
                           ) tmp
                         where alex_DWH_DIM_clients_HIST.client_id = tmp.client_id
                         and alex_DWH_DIM_clients_HIST.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD')
@@ -130,10 +130,10 @@ class Clients:
                             inner join public.alex_DWH_DIM_clients_HIST tgt
                             on stg.client_id = tgt.client_id
                             where (stg.fio <> tgt.fio or ( stg.fio is null and tgt.fio is not null ) or ( stg.fio is not null and tgt.fio is null ))
-                            where (stg.date_of_birth <> tgt.date_of_birth or ( stg.date_of_birth is null and tgt.date_of_birth is not null ) or ( stg.date_of_birth is not null and tgt.date_of_birth is null ))                          
-                            where (stg.passport_num <> tgt.passport_num or ( stg.passport_num is null and tgt.passport_num is not null ) or ( stg.passport_num is not null and tgt.passport_num is null ))                          
-                            where (stg.passport_valid_to <> tgt.passport_valid_to or ( stg.passport_valid_to is null and tgt.passport_valid_to is not null ) or ( stg.passport_valid_to is not null and tgt.passport_valid_to is null ))                          
-                            where (stg.phone <> tgt.phone or ( stg.phone is null and tgt.phone is not null ) or ( stg.phone is not null and tgt.phone is null ))
+                            or (stg.date_of_birth <> tgt.date_of_birth or ( stg.date_of_birth is null and tgt.date_of_birth is not null ) or ( stg.date_of_birth is not null and tgt.date_of_birth is null ))                          
+                            or (stg.passport_num <> tgt.passport_num or ( stg.passport_num is null and tgt.passport_num is not null ) or ( stg.passport_num is not null and tgt.passport_num is null ))                          
+                            or (stg.passport_valid_to <> tgt.passport_valid_to or ( stg.passport_valid_to is null and tgt.passport_valid_to is not null ) or ( stg.passport_valid_to is not null and tgt.passport_valid_to is null ))                          
+                            or (stg.phone <> tgt.phone or ( stg.phone is null and tgt.phone is not null ) or ( stg.phone is not null and tgt.phone is null ))
                             """)
         conn_db.commit()
 
