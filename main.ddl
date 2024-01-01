@@ -65,6 +65,11 @@ CREATE TABLE public.alex_REP_FRAUD(
                                 report_dt DATE
                                 );
 
+CREATE TABLE public.alex_STG_REP_FRAUD(
+    event_dt TIME(0),
+	card_num VARCHAR(30)
+);                
+
 -----------------------------------------------------------------
 -- Работа с таблицей public.alex_DWH_FACT_transactions
 

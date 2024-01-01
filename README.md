@@ -1,5 +1,5 @@
-python -m venv /home/oem/Desktop/db_SCD2_report/venv
-source activate /home/oem/Desktop/db_SCD2_report/venv/bin/activate
+python -m venv /home/oem/Desktop/db_SCD2_report/venv_db
+source /home/oem/Desktop/db_SCD2_report/venv_db/bin/activate
 
 pip install -r requirements.txt
 
