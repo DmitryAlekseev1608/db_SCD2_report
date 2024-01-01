@@ -6,15 +6,19 @@ import os
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from main import main
+from datetime import datetime
+
+currentDay = datetime.now().day
+currentMonth = datetime.now().month
+currentYear = datetime.now().year
 
 default_args = {
    'owner': 'alex',
-   'start_date': datetime(2023, 12, 24)
+   'start_date': datetime(currentYear, currentMonth, currentDay)
 }
 
-# для ежедневного запуска использовать schedule_interval="@daily"
 dag = DAG('alex_work',
-          schedule_interval="@once",
+          schedule_interval="@daily",
           default_args = default_args,
           catchup=True)
 

@@ -42,7 +42,11 @@ def backup():
                       DROP TABLE public.alex_STG_cards_del;  
                       DROP TABLE public.alex_DWH_DIM_account_HIST;  
                       DROP TABLE public.alex_STG_account;  
-                      DROP TABLE public.alex_STG_account_del;                                                                                    
+                      DROP TABLE public.alex_STG_account_del;    
+                      DROP TABLE public.alex_STG_REP_FRAUD;
+                      DROP TABLE public.alex_dwh_dim_clients_hist;
+                      DROP TABLE public.alex_stg_clients;
+                      DROP TABLE public.alex_stg_clients_del;                                                                            
                         """)   
 
     conn_db.commit()

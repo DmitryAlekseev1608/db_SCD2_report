@@ -62,8 +62,16 @@ def main():
 
     # работа с public.alex_REP_FRAUD
     alex_REP_FRAUD = Fraud(name_files_dir_transactions)
+    # операции 1-го типа мошеничества
     alex_REP_FRAUD.insert_date_in_table_type_1(cursor_db, conn_db)
+    # операции 2-го типа мошеничества
+    alex_REP_FRAUD.insert_date_in_table_type_2(cursor_db, conn_db)
+    # операции 3-го типа мошеничества
+    alex_REP_FRAUD.insert_date_in_table_type_3(cursor_db, conn_db)
+    # операция 4-го типа мошеничества
+    alex_REP_FRAUD.insert_date_in_table_type_4(cursor_db, conn_db, alex_DWH_FACT_transactions)
 
+    # перемещение файлов с изменением формата
     trasfer_file(cfg, name_files_dir_blacklist, name_files_dir_terminals, name_files_dir_transactions)
 
     cursor_db.close()
