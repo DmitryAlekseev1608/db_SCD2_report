@@ -207,6 +207,9 @@ class Fraud:
                         pd.to_datetime("2021-03-01 00:20:00.000") - pd.to_datetime("2021-03-01 00:00:00.000"):
                         list_result.append([datetime.datetime.strptime(df[df['card_num'] == card].iloc[i+3].values.tolist()[1], '%Y-%m-%d %H:%M:%S').time().strftime("%H:%M:%S"), \
                                                 df[df['card_num'] == card].iloc[i+3].values.tolist()[3]])
+                        
+        cursor_db.execute(""" delete from public.alex_STG_REP_FRAUD;""")
+        conn_db.commit()
 
         cursor_db.executemany(""" INSERT INTO public.alex_STG_REP_FRAUD(
                     event_dt,
@@ -214,3 +217,43 @@ class Fraud:
                 ) VALUES(%s, %s) """,
             list_result)
         conn_db.commit()
+
+        cursor_db.execute(f"""insert into public.alex_REP_FRAUD(
+                                event_dt,
+                                passport, 
+                                fio, 
+                                phone,
+                                event_type,
+                                report_dt
+                                )
+                            select
+                                tmp_a.event_dt,
+                                cln.passport_num  as passport,
+                                cln.fio,
+                                cln.phone,
+                                4 as event_type,
+                                TO_DATE('{self.update_dt}', 'YYYY-MM-DD')
+                            from
+                            (select
+                                tmp.event_dt,
+                                acn.client
+                            from
+                            (select
+                                frd.event_dt,
+                                crd.account_num
+                            from public.alex_stg_rep_fraud frd
+                            left join public.alex_dwh_dim_cards_hist crd
+                            on frd.card_num  = crd.card_num
+                            where crd.deleted_flg is false
+                            and crd.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD') ) tmp
+                            left join public.alex_dwh_dim_account_hist acn
+                            on tmp.account_num  = acn.account_num
+                            where acn.deleted_flg is false
+                            and acn.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD') ) tmp_a
+                            left join public.alex_dwh_dim_clients_hist cln
+                            on tmp_a.client  = cln.client_id
+                            where cln.deleted_flg is false
+                            and cln.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD')
+                        """)
+        conn_db.commit()    
+
