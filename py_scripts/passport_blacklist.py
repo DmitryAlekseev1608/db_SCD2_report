@@ -10,6 +10,9 @@ class PassportBlackList:
 
     def insert_date_in_table(self, cursor_db, conn_db):
 
+        cursor_db.execute(""" delete from public.alex_DWH_FACT_passport_blacklist; """)
+        conn_db.commit()
+
         cursor_db.executemany(""" INSERT INTO public.alex_DWH_FACT_passport_blacklist(
                                 entry_dt,
                                 passport_num
