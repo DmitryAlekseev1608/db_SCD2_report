@@ -8,8 +8,8 @@ db:
   PAS : "hsepassword"
 files:
 # Пути до файлов при локальном запуске для тестирования через main.py:
-  path_to_input : "input"
-  path_to_archive : "archive"
+  # path_to_input : "input"
+  # path_to_archive : "archive"
 # Пути до файлов при запуске с airflow:
-  # path_to_input : "/opt/project/input"
-  # path_to_archive : "/opt/project/archive"
+  path_to_input : "/opt/project/input"
+  path_to_archive : "/opt/project/archive"
