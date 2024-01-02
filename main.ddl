@@ -131,7 +131,7 @@ CREATE TABLE public.alex_STG_cards_del(
 -----------------------------------------------------------------
 -- Работа с таблицей public.alex_DWH_DIM_account_HIST
 
-CREATE TABLE public.alex_DWH_DIM_account_HIST(
+CREATE TABLE public.alex_DWH_DIM_accounts_HIST(
                                 account_num VARCHAR(50),
                                 valid_to DATE,
                                 client VARCHAR(100),
@@ -140,7 +140,7 @@ CREATE TABLE public.alex_DWH_DIM_account_HIST(
 	                            deleted_flg bool
                                 );
 
-CREATE TABLE public.alex_STG_account(
+CREATE TABLE public.alex_STG_accounts(
                                 account_num VARCHAR(50),
                                 valid_to DATE,
                                 client VARCHAR(100),
@@ -148,7 +148,7 @@ CREATE TABLE public.alex_STG_account(
 	                            PRIMARY KEY (account_num)                                
                                 );
 
-CREATE TABLE public.alex_STG_account_del( 
+CREATE TABLE public.alex_STG_accounts_del( 
 	                            account_num VARCHAR(50) PRIMARY KEY
                                 );
 

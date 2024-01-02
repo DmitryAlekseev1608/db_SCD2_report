@@ -7,7 +7,7 @@ db:
   LOGIN : "hse"
   PAS : "hsepassword"
 files:
-# Пути до файлов при локальном запуске для тестирования:
+# Пути до файлов при локальном запуске для тестирования через main.py:
   # path_to_input : "input"
   # path_to_archive : "archive"
 # Пути до файлов при запуске с airflow:
