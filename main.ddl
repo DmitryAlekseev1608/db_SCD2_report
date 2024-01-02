@@ -89,21 +89,7 @@ CREATE TABLE public.alex_DWH_FACT_transactions(
 CREATE TABLE public.alex_DWH_FACT_passport_blacklist(
                                 passport_num VARCHAR(50),
                                 entry_dt DATE,
-                                effective_from DATE,
-	                            effective_to DATE,
-	                            deleted_flg bool,
-	                            PRIMARY KEY (passport_num, effective_from)
-                                );
-
-CREATE TABLE public.alex_STG_passport_blacklist(
-                                passport_num VARCHAR(50),
-                                entry_dt DATE,
-                                update_dt DATE,
-	                            PRIMARY KEY (passport_num)                                
-                                );
-
-CREATE TABLE public.alex_STG_passport_blacklist_del( 
-	                            passport_num VARCHAR(30) PRIMARY KEY
+	                            PRIMARY KEY (passport_num)
                                 );
 
 -----------------------------------------------------------------

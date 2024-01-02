@@ -14,7 +14,7 @@ archive и из их наименования исчезнет указание 
 3. Данные для входа в сервис:
     login: `airflow`;
     password: `airflow`.
-4. После входа запустить даг alex_work, в котором имеется три задачи, выполняемых последовательно для
+4. После входа запустить даг alex_work (нажать Trigger DAG), в котором имеется три задачи, выполняемых последовательно для
 каждого из трех имеющихся дней.
 5. После выполнения всех задач рекомендуется остановить контейнеры командой:
     `sudo docker-compose down --volumes --rmi all`.
@@ -28,7 +28,7 @@ archive и из их наименования исчезнет указание 
 При необходимости закомментировать пути к папкам input и archive из configs.yaml для airflow и разкоментировать
 эти же пути для main.py. Подробности в файле configs.yaml.
 1. Создать виртуальную среду `python -m venv /home/oem/Desktop/db_SCD2_report/venv_db` (путь уточнить по факту).
-2. Активировать виртуальную среду source `/home/oem/Desktop/db_SCD2_report/venv_db/bin/activate` (путь уточнить по факту).
+2. Активировать виртуальную среду `source /home/oem/Desktop/db_SCD2_report/venv_db/bin/activate` (путь уточнить по факту).
 3. Установить зависимости `pip install -r requirements.txt`.
 4. Запустить файл main.py.
 

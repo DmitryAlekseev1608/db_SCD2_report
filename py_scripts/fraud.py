@@ -52,7 +52,7 @@ class Fraud:
                             where trn.trans_date::date = TO_DATE('{self.update_dt}', 'YYYY-MM-DD')
                             and crd.deleted_flg is false
                             and crd.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD') ) tmp
-                            left join public.alex_DWH_DIM_account_HIST acn
+                            left join public.alex_DWH_DIM_accounts_HIST acn
                             on tmp.account = acn.account_num
                             where acn.deleted_flg is false
                             and acn.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD') ) tmp_a
@@ -65,7 +65,6 @@ class Fraud:
                             where (pbl.passport_num = tmp_p.passport
                             or tmp_p.passport_valid_to < tmp_p.trans_date
                             or tmp_p.passport_valid_to = tmp_p.trans_date)
-                            and (pbl.deleted_flg = false and pbl.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD'))
                             """)
         conn_db.commit()
 
@@ -103,7 +102,7 @@ class Fraud:
                             where trn.trans_date::date = TO_DATE('{self.update_dt}', 'YYYY-MM-DD')
                             and crd.deleted_flg is false
                             and crd.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD') ) tmp
-                            left join public.alex_DWH_DIM_account_HIST acn
+                            left join public.alex_DWH_DIM_accounts_HIST acn
                             on tmp.account = acn.account_num
                             where acn.deleted_flg is false
                             and acn.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD')
@@ -170,7 +169,7 @@ class Fraud:
                             on tmp_b.card_num = crd.card_num
                             where crd.deleted_flg is false
                             and crd.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD') ) tmp_c
-                            left join public.alex_DWH_DIM_account_HIST acn
+                            left join public.alex_DWH_DIM_accounts_HIST acn
                             on tmp_c.account_num = acn.account_num
                             where acn.deleted_flg is false
                             and acn.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD') ) tmp_d
@@ -246,7 +245,7 @@ class Fraud:
                             on frd.card_num  = crd.card_num
                             where crd.deleted_flg is false
                             and crd.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD') ) tmp
-                            left join public.alex_dwh_dim_account_hist acn
+                            left join public.alex_DWH_DIM_accounts_HIST acn
                             on tmp.account_num  = acn.account_num
                             where acn.deleted_flg is false
                             and acn.effective_to = TO_DATE('2999-01-01', 'YYYY-MM-DD') ) tmp_a
